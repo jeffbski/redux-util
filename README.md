@@ -47,8 +47,8 @@ const defaultState = { counter: 10 };
 const actions = createActions(
   {
     counter: {
-      increment: (amount = 1) => ({ amount }),
-      decrement: (amount = 1) => ({ amount: -amount })
+      increment: (amount = 1) => amount,
+      decrement: (amount = 1) => amount
     }
   },
   { prefix: 'foo' }
@@ -74,12 +74,12 @@ console.log(actions.counter.increment.toString()); // foo/counter/increment
 
 const reducer = handleActions(
   {
-    [actions.counter.increment]: (state, { payload: { amount } }) => {
-      return { ...state, counter: state.counter + amount };
+    [actions.counter.increment]: (state, { payload }) => {
+      return { ...state, counter: state.counter + payload };
     },
 
-    [actions.counter.decrement]: (state, { payload: { amount } }) => {
-      return { ...state, counter: state.counter + amount };
+    [actions.counter.decrement]: (state, { payload }) => {
+      return { ...state, counter: state.counter - payload };
     }
   },
   defaultState

@@ -40,25 +40,45 @@ The [npm](https://www.npmjs.com) package provides a [CommonJS](http://webpack.gi
 ## Usage
 
 ```js
-import {
-  createActions,
-  handleActions,
-  combineActions
-} from '@jeffbski/redux-util';
+import { createActions, createReducer } from '@jeffbski/redux-util';
 
 const defaultState = { counter: 10 };
 
-const { increment, decrement } = createActions({
-  increment: (amount = 1) => ({ amount }),
-  decrement: (amount = 1) => ({ amount: -amount })
-});
+const actions = createActions(
+  {
+    counter: {
+      increment: (amount = 1) => ({ amount }),
+      decrement: (amount = 1) => ({ amount: -amount })
+    }
+  },
+  { prefix: 'foo' }
+); // my namespace for these actions
+
+// we now have an object with two action creators:
+const a1 = actions.counter.increment(10);
+console.log(a1); // { type: 'foo/counter/increment', payload: 10 }
+
+const a2 = actions.counter.decrement(20);
+console.log(a2); // { type: 'foo/counter/decrement', payload: 20 }
+
+// Also these action creators will return the original action type
+// if you coerce a toString on the function.
+console.log(actions.counter.increment.toString()); // foo/counter/increment
+
+// Let's use createReducer to create a reducer which handles all
+// of our actions. We can coerce actionCreator to a string using
+// [] in a key for our reducerMap.
+
+// No switch statement needed here, reducer handles all the
+// provided actions and the default.
 
 const reducer = handleActions(
   {
-    [combineActions(increment, decrement)]: (
-      state,
-      { payload: { amount } }
-    ) => {
+    [actions.counter.increment]: (state, { payload: { amount } }) => {
+      return { ...state, counter: state.counter + amount };
+    },
+
+    [actions.counter.decrement]: (state, { payload: { amount } }) => {
       return { ...state, counter: state.counter + amount };
     }
   },
@@ -70,7 +90,7 @@ export default reducer;
 
 # Documentation
 
-See the [documentation here](./docs/README.md)
+See the [full documentation here](./docs/README.md)
 
 ## Forked from redux-actions
 

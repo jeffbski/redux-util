@@ -93,21 +93,10 @@
     "lodash.curry": "^4.1.1",
     "reduce-reducers": "^0.1.0"
   },
-  "xo": {
-    "prettier": true,
-    "space": true,
-    "extends": [
-      "unicorn-camelcase",
-      "jest-files"
-    ]
-  },
   "prettier": {
     "singleQuote": true,
     "bracketSpacing": true,
     "trailingComma": "none"
-  },
-  "jest": {
-    "collectCoverage": true
   },
   "lint-staged": {
     "*.{js,md}": [

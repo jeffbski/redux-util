@@ -1,15 +1,15 @@
 import expect from 'expect-legacy';
-import handleActions from '../src/handleActions';
+import createReducer from '../src/createReducer';
 import createAction from '../src/createAction';
 import createActions from '../src/createActions';
 import combineActions from '../src/combineActions';
 
 const defaultState = { counter: 0 };
 
-describe('handleActions', () => {
+describe('createReducer', () => {
   it('throws an error when defaultState is not defined', () => {
     expect(() => {
-      handleActions({
+      createReducer({
         increment: ({ counter }, { payload: amount }) => ({
           counter: counter + amount
         }),
@@ -23,7 +23,7 @@ describe('handleActions', () => {
 
   it('throws an error when defaultState is not defined for combinedActions', () => {
     expect(() => {
-      handleActions({
+      createReducer({
         [combineActions('increment', 'decrement')]: (
           { counter },
           { type, payload: amount }
@@ -37,7 +37,7 @@ describe('handleActions', () => {
   });
 
   it('creates a single handler from a map of multiple action handlers', () => {
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         increment: ({ counter }, { payload: amount }) => ({
           counter: counter + amount
@@ -61,7 +61,7 @@ describe('handleActions', () => {
   });
 
   it('creates a single handler from a JavaScript Map of multiple action handlers', () => {
-    const reducer = handleActions(
+    const reducer = createReducer(
       new Map([
         [
           'increment',
@@ -94,7 +94,7 @@ describe('handleActions', () => {
     const increment = createAction('increment');
     const decrement = createAction('decrement');
 
-    const reducer = handleActions(
+    const reducer = createReducer(
       new Map([
         [
           increment,
@@ -126,7 +126,7 @@ describe('handleActions', () => {
   it('works with symbol action types', () => {
     const increment = Symbol('increment');
 
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         [increment]: ({ counter }, { payload: amount }) => ({
           counter: counter + amount
@@ -141,7 +141,7 @@ describe('handleActions', () => {
   });
 
   it('accepts a default state used when previous state is undefined', () => {
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         increment: ({ counter }, { payload: amount }) => ({
           counter: counter + amount
@@ -161,7 +161,7 @@ describe('handleActions', () => {
 
   it('accepts action function as action type', () => {
     const incrementAction = createAction('increment');
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         [incrementAction]: ({ counter }, { payload: amount }) => ({
           counter: counter + amount
@@ -183,7 +183,7 @@ describe('handleActions', () => {
 
     const initialState = { counter: 10 };
 
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         [combineActions(increment, decrement)](
           state,
@@ -213,7 +213,7 @@ describe('handleActions', () => {
 
     const initialState = { counter: 10 };
 
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         [combineActions(increment, decrement)]: {
           next(
@@ -252,7 +252,7 @@ describe('handleActions', () => {
   it('works with createActions action creators', () => {
     const { increment, decrement } = createActions('increment', 'decrement');
 
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         [increment]: ({ counter }, { payload }) => ({
           counter: counter + payload
@@ -296,7 +296,7 @@ describe('handleActions', () => {
     });
 
     // NOTE: We should be using combineReducers in production, but this is just a test.
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         [combineActions(increment, decrement)]: (
           { counter, message },
@@ -332,14 +332,14 @@ describe('handleActions', () => {
 
   it('returns default state with empty handlers and undefined previous state', () => {
     const { unhandled } = createActions('unhandled');
-    const reducer = handleActions({}, defaultState);
+    const reducer = createReducer({}, defaultState);
 
     expect(reducer(undefined, unhandled())).toEqual(defaultState);
   });
 
   it('returns previous defined state with empty handlers', () => {
     const { unhandled } = createActions('unhandled');
-    const reducer = handleActions({}, defaultState);
+    const reducer = createReducer({}, defaultState);
 
     expect(reducer({ counter: 10 }, unhandled())).toEqual({ counter: 10 });
   });
@@ -348,7 +348,7 @@ describe('handleActions', () => {
     const wrongTypeHandlers = [1, 'string', [], null];
 
     wrongTypeHandlers.forEach(wrongTypeHandler => {
-      expect(() => handleActions(wrongTypeHandler, defaultState)).toThrow(
+      expect(() => createReducer(wrongTypeHandler, defaultState)).toThrow(
         'Expected handlers to be a plain object.'
       );
     });
@@ -377,7 +377,7 @@ describe('handleActions', () => {
     });
 
     // NOTE: We should be using combineReducers in production, but this is just a test.
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         [combineActions(increment, decrement)]: (
           { counter, message },
@@ -451,7 +451,7 @@ describe('handleActions', () => {
     );
 
     // NOTE: We should be using combineReducers in production, but this is just a test.
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         [combineActions(increment, decrement)]: (
           { counter, message },
@@ -506,7 +506,7 @@ describe('handleActions', () => {
     const noop = createAction('app/noop');
     const increment = createAction('app/increment');
 
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         app: {
           noop: undefined,
@@ -552,7 +552,7 @@ describe('handleActions', () => {
       apiCall2: { loading: undefined }
     });
 
-    const reducer = handleActions(
+    const reducer = createReducer(
       {
         [combineActions(apiCall1, apiCall2)]: {
           loading: (state, { payload: loading }) => ({ loading })

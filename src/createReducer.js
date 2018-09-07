@@ -10,7 +10,7 @@ function get(key, x) {
   return isMap(x) ? x.get(key) : x[key];
 }
 
-export default function handleActions(handlers, defaultState, options = {}) {
+export default function createReducer(handlers, defaultState, options = {}) {
   invariant(
     isPlainObject(handlers) || isMap(handlers),
     'Expected handlers to be a plain object.'

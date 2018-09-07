@@ -2,7 +2,6 @@ import expect from 'expect-legacy';
 import createReducer from '../src/createReducer';
 import createAction from '../src/createAction';
 import createActions from '../src/createActions';
-import combineActions from '../src/combineActions';
 
 const defaultState = { counter: 0 };
 
@@ -19,21 +18,6 @@ describe('createReducer', () => {
         })
       });
     }).toThrow('defaultState for reducer handling increment should be defined');
-  });
-
-  it('throws an error when defaultState is not defined for combinedActions', () => {
-    expect(() => {
-      createReducer({
-        [combineActions('increment', 'decrement')]: (
-          { counter },
-          { type, payload: amount }
-        ) => ({
-          counter: counter + (type === 'increment' ? +1 : -1) * amount
-        })
-      });
-    }).toThrow(
-      'defaultState for reducer handling increment, decrement should be defined'
-    );
   });
 
   it('creates a single handler from a map of multiple action handlers', () => {
@@ -175,80 +159,6 @@ describe('createReducer', () => {
     });
   });
 
-  it('accepts combined actions as action types in single reducer form', () => {
-    const { increment, decrement } = createActions({
-      increment: amount => ({ amount }),
-      decrement: amount => ({ amount: -amount })
-    });
-
-    const initialState = { counter: 10 };
-
-    const reducer = createReducer(
-      {
-        [combineActions(increment, decrement)](
-          state,
-          {
-            payload: { amount }
-          }
-        ) {
-          return { ...state, counter: state.counter + amount };
-        }
-      },
-      defaultState
-    );
-
-    expect(reducer(initialState, increment(5))).toEqual({ counter: 15 });
-    expect(reducer(initialState, decrement(5))).toEqual({ counter: 5 });
-    expect(reducer(initialState, { type: 'NOT_TYPE', payload: 1000 })).toBe(
-      initialState
-    );
-    expect(reducer(undefined, increment(5))).toEqual({ counter: 5 });
-  });
-
-  it('accepts combined actions as action types in the next/throw form', () => {
-    const { increment, decrement } = createActions({
-      increment: amount => ({ amount }),
-      decrement: amount => ({ amount: -amount })
-    });
-
-    const initialState = { counter: 10 };
-
-    const reducer = createReducer(
-      {
-        [combineActions(increment, decrement)]: {
-          next(
-            state,
-            {
-              payload: { amount }
-            }
-          ) {
-            return { ...state, counter: state.counter + amount };
-          },
-
-          throw(state) {
-            return { ...state, counter: 0 };
-          }
-        }
-      },
-      defaultState
-    );
-    const error = new Error();
-
-    // Non-Errors
-    expect(reducer(initialState, increment(5))).toEqual({ counter: 15 });
-    expect(reducer(initialState, decrement(5))).toEqual({ counter: 5 });
-    expect(reducer(initialState, { type: 'NOT_TYPE', payload: 1000 })).toBe(
-      initialState
-    );
-    expect(reducer(undefined, increment(5))).toEqual({ counter: 5 });
-
-    // Errors
-    expect(
-      reducer(initialState, { type: 'increment', payload: error, error: true })
-    ).toEqual({ counter: 0 });
-    expect(reducer(initialState, decrement(error))).toEqual({ counter: 0 });
-  });
-
   it('works with createActions action creators', () => {
     const { increment, decrement } = createActions('increment', 'decrement');
 
@@ -298,10 +208,12 @@ describe('createReducer', () => {
     // NOTE: We should be using combineReducers in production, but this is just a test.
     const reducer = createReducer(
       {
-        [combineActions(increment, decrement)]: (
-          { counter, message },
-          { payload: { amount } }
-        ) => ({
+        [increment]: ({ counter, message }, { payload: { amount } }) => ({
+          counter: counter + amount,
+          message
+        }),
+
+        [decrement]: ({ counter, message }, { payload: { amount } }) => ({
           counter: counter + amount,
           message
         }),
@@ -376,13 +288,14 @@ describe('createReducer', () => {
       }
     });
 
-    // NOTE: We should be using combineReducers in production, but this is just a test.
     const reducer = createReducer(
       {
-        [combineActions(increment, decrement)]: (
-          { counter, message },
-          { payload: { amount } }
-        ) => ({
+        [increment]: ({ counter, message }, { payload: { amount } }) => ({
+          counter: counter + amount,
+          message
+        }),
+
+        [decrement]: ({ counter, message }, { payload: { amount } }) => ({
           counter: counter + amount,
           message
         }),
@@ -450,13 +363,14 @@ describe('createReducer', () => {
       { namespace: ':' }
     );
 
-    // NOTE: We should be using combineReducers in production, but this is just a test.
     const reducer = createReducer(
       {
-        [combineActions(increment, decrement)]: (
-          { counter, message },
-          { payload: { amount } }
-        ) => ({
+        [increment]: ({ counter, message }, { payload: { amount } }) => ({
+          counter: counter + amount,
+          message
+        }),
+
+        [decrement]: ({ counter, message }, { payload: { amount } }) => ({
           counter: counter + amount,
           message
         }),
@@ -540,32 +454,5 @@ describe('createReducer', () => {
         message: 'hello'
       }
     );
-  });
-
-  it('works with combineActions nested', () => {
-    const { apiCall1, apiCall2 } = createActions('apiCall1', 'apiCall2');
-    const {
-      apiCall1: { loading: apiCallLoading1 },
-      apiCall2: { loading: apiCallLoading2 }
-    } = createActions({
-      apiCall1: { loading: undefined },
-      apiCall2: { loading: undefined }
-    });
-
-    const reducer = createReducer(
-      {
-        [combineActions(apiCall1, apiCall2)]: {
-          loading: (state, { payload: loading }) => ({ loading })
-        }
-      },
-      { loading: false }
-    );
-
-    expect(reducer({ loading: false }, apiCallLoading1(true))).toEqual({
-      loading: true
-    });
-    expect(reducer({ loading: false }, apiCallLoading2(true))).toEqual({
-      loading: true
-    });
   });
 });

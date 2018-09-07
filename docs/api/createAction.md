@@ -321,7 +321,7 @@ const { actionOne, actionTwo, actionThree } = createActions(
 
     // trailing action type string form; payload creator is the identity
   },
-  'actionThree,
+  'actionThree',
   {
     divider: '--',
     prefix: 'foo'

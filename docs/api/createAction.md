@@ -1,13 +1,14 @@
 # API Reference for createAction(s)
 
-* [Methods](#methods)
-  * [createAction](#createaction)
-    * [`createAction(type)`](#createactiontype)
-    * [`createAction(type, payloadCreator)`](#createactiontype-payloadcreator)
-    * [`createAction(type, payloadCreator, metaCreator)`](#createactiontype-payloadcreator-metacreator)
-  * [createActions](#createactions)
-    * [`createActions(actionMap)`](#createactionsactionmap)
-    * [`createActions(actionMap, ...identityActions)`](#createactionsactionmap-identityactions)
+- [Methods](#methods)
+  - [createAction](#createaction)
+    - [`createAction(type)`](#createactiontype)
+    - [`createAction(type, payloadCreator)`](#createactiontype-payloadcreator)
+    - [`createAction(type, payloadCreator, metaCreator)`](#createactiontype-payloadcreator-metacreator)
+  - [createActions](#createactions)
+    - [`createActions(actionMap)`](#createactionsactionmap)
+    - [`createActions(actionMap, ...identityActions)`](#createactionsactionmap-identityactions)
+    - [`createActions(actionMap, ...identityActions, options)`](#createactionsactionmap-identityactions-options)
 
 ## Methods
 
@@ -150,10 +151,10 @@ import { createActions } from 'redux-actions';
 
 `actionMap` is an object which can optionally have a recursive data structure, with action types as keys, and whose values **must** be either
 
-* a function, which is the payload creator for that action
-* an array with `payload` and `meta` functions in that order, as in [`createAction`](#createaction)
-  * `meta` is **required** in this case \(otherwise use the function form above\)
-* an `actionMap`
+- a function, which is the payload creator for that action
+- an array with `payload` and `meta` functions in that order, as in [`createAction`](#createaction)
+  - `meta` is **required** in this case \(otherwise use the function form above\)
+- an `actionMap`
 
 ###### EXAMPLE
 
@@ -250,6 +251,53 @@ expect(actionTwo('first', 'second')).to.deep.equal({
 
 expect(actionThree(3)).to.deep.equal({
   type: 'ACTION_THREE',
+  payload: 3
+});
+```
+
+#### `createActions(actionMap, ...identityActions, options)`{#createactionsactionmap-identityactions-options}
+
+`identityActions` is an optional list of positional string arguments that are action type strings; these action types will use the identity payload creator.
+
+`options` is an optional object which can adjust the divider and prefix of action types'. Valid properties are `namespace` and `prefix`. Both are optional.
+
+- setting `options.namespace` - changes the divider between action parts, the default is `/`
+- setting `options.prefix` - changes the prefix of the action types, default is ``. It does not change the nesting depth of the resulting action object.
+
+```js
+const { actionOne, actionTwo, actionThree } = createActions(
+  {
+    // function form; payload creator defined inline
+    actionOne: (key, value) => ({ [key]: value }),
+
+    // array form
+    actionTwo: [
+      first => [first], // payload
+      (first, second) => ({ second }) // meta
+    ]
+
+    // trailing action type string form; payload creator is the identity
+  },
+  'actionThree,
+  {
+    namespace: '--',
+    prefix: 'foo'
+  }
+);
+
+expect(actionOne('key', 1)).to.deep.equal({
+  type: 'foo--actionOne,
+  payload: { key: 1 }
+});
+
+expect(actionTwo('first', 'second')).to.deep.equal({
+  type: 'foo--actionTwo,
+  payload: ['first'],
+  meta: { second: 'second' }
+});
+
+expect(actionThree(3)).to.deep.equal({
+  type: 'foo--actionThree,
   payload: 3
 });
 ```

@@ -46,8 +46,8 @@ import {
 const defaultState = { counter: 10 };
 
 const { increment, decrement } = createActions({
-  INCREMENT: (amount = 1) => ({ amount }),
-  DECREMENT: (amount = 1) => ({ amount: -amount })
+  increment: (amount = 1) => ({ amount }),
+  decrement: (amount = 1) => ({ amount: -amount })
 });
 
 const reducer = handleActions(

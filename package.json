@@ -1,7 +1,7 @@
 {
-  "name": "redux-actions",
+  "name": "@jeffbski/redux-util",
   "version": "2.6.1",
-  "description": "Flux Standard Action utlities for Redux",
+  "description": "Redux utilities",
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
@@ -18,6 +18,7 @@
     "clean": "rimraf coverage dist es lib",
     "lint": "xo",
     "prepublishOnly": "run-s build",
+    "publishScoped": "npm publish --access public",
     "test": "jest"
   },
   "files": [
@@ -31,14 +32,17 @@
     "fsa",
     "actions"
   ],
-  "author": "Andrew Clark <acdlite@me.com>",
+  "author": "Jeff Barczewski <jeff.barczewski@gmail.com> (https://github.com/jeffbski)",
+  "contributors": [
+    "Andrew Clark <acdlite@me.com>"
+  ],
   "bugs": {
-    "url": "https://github.com/redux-utilities/redux-actions/issues"
+    "url": "https://github.com/jeffbski/redux-util/issues"
   },
-  "homepage": "https://github.com/redux-utilities/redux-actions",
+  "homepage": "https://github.com/jeffbski/redux-util",
   "repository": {
     "type": "git",
-    "url": "https://github.com/redux-utilities/redux-actions.git"
+    "url": "https://github.com/jeffbski/redux-util.git"
   },
   "license": "MIT",
   "devDependencies": {

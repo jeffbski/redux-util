@@ -1,9 +1,14 @@
-# redux-actions
+# @jeffbski/redux-util - Redux Utilities
 
-[![Build Status](https://travis-ci.org/redux-utilities/redux-actions.svg?branch=master)](https://travis-ci.org/redux-utilities/redux-actions)
-[![codecov](https://codecov.io/gh/redux-utilities/redux-actions/branch/master/graph/badge.svg)](https://codecov.io/gh/redux-utilities/redux-actions)
-[![npm](https://img.shields.io/npm/v/redux-actions.svg)](https://www.npmjs.com/package/redux-actions)
-[![npm](https://img.shields.io/npm/dm/redux-actions.svg)](https://www.npmjs.com/package/redux-actions)
+Initial codebase was based on redux-actions. Utility methods to simplify building action creators and reducers.
+
+Differences from redux-actions
+
+* no automatic camel casing in createActions
+* createActions accepts a namespace/prefix without deepening the object tree
+* renamed handleActions to createReducer
+
+[![Build Status](https://travis-ci.org/jeffbski/redux-util.svg?branch=master)](https://travis-ci.org/jeffbski/redux-util)
 
 > [Flux Standard Action](https://github.com/acdlite/flux-standard-action) utilities for Redux
 
@@ -29,8 +34,6 @@ $ yarn add redux-actions
 ```
 
 The [npm](https://www.npmjs.com) package provides a [CommonJS](http://webpack.github.io/docs/commonjs.html) build for use in Node.js, and with bundlers like [Webpack](http://webpack.github.io/) and [Browserify](http://browserify.org/). It also includes an [ES modules](http://jsmodules.io/) build that works well with [Rollup](http://rollupjs.org/) and [Webpack2](https://webpack.js.org)'s tree-shaking.
-
-The [UMD](https://unpkg.com/redux-actions@latest/dist) build exports a global called `window.ReduxActions` if you add it to your page via a `<script>` tag. We _don’t_ recommend UMD builds for any serious application, as most of the libraries complementary to Redux are only available on [npm](https://www.npmjs.com/search?q=redux).
 
 ## Usage
 
@@ -59,13 +62,12 @@ const reducer = handleActions(
 export default reducer;
 ```
 
-[See the full API documentation.](https://redux-actions.js.org/)
-
 # Documentation
 
-* [Introduction](https://redux-actions.js.org/docs/introduction/index.html)
-* [API](https://redux-actions.js.org/docs/api/index.html)
-* [Middleware](https://redux-actions.js.org/docs/middleware/index.html)
-* [External Resources](https://redux-actions.js.org/docs/ExternalResources.html)
-* [Change Log](https://redux-actions.js.org/docs/ChangeLog.html)
-* [Contributors](https://redux-actions.js.org/docs/Contributors.html)
+TODO
+
+## Forked from redux-actions
+
+This code was forked from redux-actions which was created by Andrew Clark and released under the MIT license.
+
+The original contributors can be found at https://github.com/redux-utilities/redux-actions/graphs/contributors

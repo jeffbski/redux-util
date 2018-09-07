@@ -213,7 +213,7 @@ describe('createActions', () => {
     });
   });
 
-  it('creates actions from a namespaced action map', () => {
+  it('creates actions from a divided action map', () => {
     const actionCreators = createActions(
       {
         app: {
@@ -264,7 +264,7 @@ describe('createActions', () => {
     });
   });
 
-  it('creates namespaced actions with payload creators in array form', () => {
+  it('creates divided actions with payload creators in array form', () => {
     const actionCreators = createActions({
       app: {
         counter: {
@@ -299,7 +299,7 @@ describe('createActions', () => {
     );
   });
 
-  it('creates namespaced actions with a chosen namespace string', () => {
+  it('creates divided actions with a chosen divider string', () => {
     const actionCreators = createActions(
       {
         app: {
@@ -316,7 +316,7 @@ describe('createActions', () => {
           ]
         }
       },
-      { namespace: '--' }
+      { divider: '--' }
     );
 
     expect(actionCreators.app.counter.increment(1)).toEqual({
@@ -395,7 +395,7 @@ describe('createActions', () => {
     });
   });
 
-  it('properly handles `prefix` and `namespace` options provided together', () => {
+  it('properly handles `prefix` and `divider` options provided together', () => {
     const actionCreators = createActions(
       {
         app: {
@@ -414,7 +414,7 @@ describe('createActions', () => {
       'actionTwo',
       {
         prefix: 'my-awesome-feature',
-        namespace: '--'
+        divider: '--'
       }
     );
 

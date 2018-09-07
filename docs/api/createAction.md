@@ -209,12 +209,12 @@ expect(
 });
 ```
 
-When using this form, you can pass an object with key `namespace` as the last positional argument (the default is `/`).
+When using this form, you can pass an object with key `divider` as the last positional argument (the default is `/`).
 
 ###### EXAMPLE
 
 ```js
-createActions({ ... }, 'INCREMENT', { namespace: '--' })
+createActions({ ... }, 'INCREMENT', { divider: '--' })
 ```
 
 #### `createActions(actionMap, ...identityActions)`{#createactionsactionmap-identityactions}
@@ -259,9 +259,9 @@ expect(actionThree(3)).to.deep.equal({
 
 `identityActions` is an optional list of positional string arguments that are action type strings; these action types will use the identity payload creator.
 
-`options` is an optional object which can adjust the divider and prefix of action types'. Valid properties are `namespace` and `prefix`. Both are optional.
+`options` is an optional object which can adjust the divider and prefix of action types'. Valid properties are `divider` and `prefix`. Both are optional.
 
-- setting `options.namespace` - changes the divider between action parts, the default is `/`
+- setting `options.divider` - changes the divider between action parts, the default is `/`
 - setting `options.prefix` - changes the prefix of the action types, default is ``. It does not change the nesting depth of the resulting action object.
 
 ```js
@@ -280,7 +280,7 @@ const { actionOne, actionTwo, actionThree } = createActions(
   },
   'actionThree,
   {
-    namespace: '--',
+    divider: '--',
     prefix: 'foo'
   }
 );

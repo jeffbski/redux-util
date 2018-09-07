@@ -22,7 +22,7 @@ describe('unflattenActionCreators', () => {
     expect(actionMap.app.counter.decrement(100)).toEqual({ amount: -100 });
   });
 
-  it('unflattens a flattened action map with custom namespace', () => {
+  it('unflattens a flattened action map with custom divider', () => {
     const actionMap = unflattenActionCreators(
       {
         'app--counter--increment': amount => ({ amount }),
@@ -32,7 +32,7 @@ describe('unflattenActionCreators', () => {
         }),
         login: username => ({ username })
       },
-      { namespace: '--' }
+      { divider: '--' }
     );
 
     expect(actionMap.login('yangmillstheory')).toEqual({
@@ -66,7 +66,7 @@ describe('unflattenActionCreators', () => {
     expect(actionMap.app.counter.decrement(100)).toEqual({ amount: -100 });
   });
 
-  it('unflattens a flattened action map with custom namespace and prefix', () => {
+  it('unflattens a flattened action map with custom divider and prefix', () => {
     const actionMap = unflattenActionCreators(
       {
         'my--feature--app--counter--increment': amount => ({ amount }),
@@ -76,7 +76,7 @@ describe('unflattenActionCreators', () => {
         }),
         'my--feature--login': username => ({ username })
       },
-      { namespace: '--', prefix: 'my--feature' }
+      { divider: '--', prefix: 'my--feature' }
     );
 
     expect(actionMap.login('test')).toEqual({ username: 'test' });

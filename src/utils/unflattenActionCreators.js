@@ -1,9 +1,9 @@
-import { DEFAULT_NAMESPACE } from '../constants';
+import { DEFAULT_DIVIDER } from '../constants';
 import isEmpty from './isEmpty';
 
 export default function unflattenActionCreators(
   flatActionCreators,
-  { namespace = DEFAULT_NAMESPACE, prefix } = {}
+  { divider = DEFAULT_DIVIDER, prefix } = {}
 ) {
   function unflatten(
     flatActionType,
@@ -29,13 +29,9 @@ export default function unflattenActionCreators(
   const nestedActionCreators = {};
   Object.getOwnPropertyNames(flatActionCreators).forEach(type => {
     const unprefixedType = prefix
-      ? type.replace(`${prefix}${namespace}`, '')
+      ? type.replace(`${prefix}${divider}`, '')
       : type;
-    return unflatten(
-      type,
-      nestedActionCreators,
-      unprefixedType.split(namespace)
-    );
+    return unflatten(type, nestedActionCreators, unprefixedType.split(divider));
   });
 
   return nestedActionCreators;

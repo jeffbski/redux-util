@@ -10,7 +10,7 @@ import arrayToObject from './utils/arrayToObject';
 import flattenActionMap from './utils/flattenActionMap';
 import unflattenActionCreators from './utils/unflattenActionCreators';
 import createAction from './createAction';
-import { DEFAULT_NAMESPACE } from './constants';
+import { DEFAULT_DIVIDER } from './constants';
 
 export default function createActions(actionMap, ...identityActions) {
   const options = isPlainObject(getLastElement(identityActions))
@@ -41,7 +41,7 @@ function actionCreatorsFromActionMap(actionMap, options) {
 
 function actionMapToActionCreators(
   actionMap,
-  { prefix, namespace = DEFAULT_NAMESPACE } = {}
+  { prefix, divider = DEFAULT_DIVIDER } = {}
 ) {
   function isValidActionMapValue(actionMapValue) {
     if (isFunction(actionMapValue) || isNil(actionMapValue)) {
@@ -65,7 +65,7 @@ function actionMapToActionCreators(
         'Expected function, undefined, null, or array with payload and meta ' +
           `functions for ${type}`
       );
-      const prefixedType = prefix ? `${prefix}${namespace}${type}` : type;
+      const prefixedType = prefix ? `${prefix}${divider}${type}` : type;
       const actionCreator = isArray(actionMapValue)
         ? createAction(prefixedType, ...actionMapValue)
         : createAction(prefixedType, actionMapValue);

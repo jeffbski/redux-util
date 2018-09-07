@@ -2,7 +2,7 @@ import expect from 'expect-legacy';
 import flattenActionMap from '../src/utils/flattenActionMap';
 
 describe('flattenActionMap', () => {
-  it('flattens an action map with the default namespacer', () => {
+  it('flattens an action map with the default dividerr', () => {
     const actionMap = {
       APP: {
         COUNTER: {
@@ -52,7 +52,7 @@ describe('flattenActionMap', () => {
     });
   });
 
-  it('uses a custom namespace string', () => {
+  it('uses a custom divider string', () => {
     const actionMap = {
       APP: {
         COUNTER: {
@@ -64,7 +64,7 @@ describe('flattenActionMap', () => {
       LOGIN: username => ({ username })
     };
 
-    expect(flattenActionMap(actionMap, { namespace: '-' })).toEqual({
+    expect(flattenActionMap(actionMap, { divider: '-' })).toEqual({
       'APP-COUNTER-INCREMENT': actionMap.APP.COUNTER.INCREMENT,
       'APP-COUNTER-DECREMENT': actionMap.APP.COUNTER.DECREMENT,
       'APP-NOTIFY': actionMap.APP.NOTIFY,
@@ -92,7 +92,7 @@ describe('flattenActionMap', () => {
     });
   });
 
-  it('handles prefix + namespace options', () => {
+  it('handles prefix + divider options', () => {
     const actionMap = {
       APP: {
         COUNTER: {
@@ -104,13 +104,13 @@ describe('flattenActionMap', () => {
       LOGIN: username => ({ username })
     };
 
-    expect(
-      flattenActionMap(actionMap, { namespace: '-', prefix: 'my' })
-    ).toEqual({
-      'my-APP-COUNTER-INCREMENT': actionMap.APP.COUNTER.INCREMENT,
-      'my-APP-COUNTER-DECREMENT': actionMap.APP.COUNTER.DECREMENT,
-      'my-APP-NOTIFY': actionMap.APP.NOTIFY,
-      'my-LOGIN': actionMap.LOGIN
-    });
+    expect(flattenActionMap(actionMap, { divider: '-', prefix: 'my' })).toEqual(
+      {
+        'my-APP-COUNTER-INCREMENT': actionMap.APP.COUNTER.INCREMENT,
+        'my-APP-COUNTER-DECREMENT': actionMap.APP.COUNTER.DECREMENT,
+        'my-APP-NOTIFY': actionMap.APP.NOTIFY,
+        'my-LOGIN': actionMap.LOGIN
+      }
+    );
   });
 });

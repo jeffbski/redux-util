@@ -183,7 +183,7 @@ describe('createReducer', () => {
     });
   });
 
-  it('works with namespaced actions', () => {
+  it('works with divided actions', () => {
     const {
       app: {
         counter: { increment, decrement },
@@ -338,7 +338,7 @@ describe('createReducer', () => {
     });
   });
 
-  it('works with nested reducerMap and namespace', () => {
+  it('works with nested reducerMap and divider', () => {
     const {
       app: {
         counter: { increment, decrement },
@@ -360,7 +360,7 @@ describe('createReducer', () => {
           ]
         }
       },
-      { namespace: ':' }
+      { divider: ':' }
     );
 
     const reducer = createReducer(
@@ -389,7 +389,7 @@ describe('createReducer', () => {
         }
       },
       { counter: 0, message: '' },
-      { namespace: ':' }
+      { divider: ':' }
     );
 
     expect(String(increment)).toBe('app:counter:increment');

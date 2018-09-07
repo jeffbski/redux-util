@@ -8,6 +8,7 @@ Differences from redux-actions
 - renamed handleActions to createReducer
 - removed handleAction export
 - removed combineActions
+- renamed options.namespace to options.divider in createActions and createReducer
 
 [![Build Status](https://travis-ci.org/jeffbski/redux-util.svg?branch=master)](https://travis-ci.org/jeffbski/redux-util)
 
@@ -81,5 +82,6 @@ Differences from redux-actions
 - handleActions renamed createReducer
 - removed handleAction export
 - removed combineActions
+- renamed options.namespace to options.divider in createActions and createReducer
 
 The original contributors can be found at https://github.com/redux-utilities/redux-actions/graphs/contributors

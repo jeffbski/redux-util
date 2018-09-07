@@ -72,7 +72,7 @@ console.log(actions.counter.increment.toString()); // foo/counter/increment
 // No switch statement needed here, reducer handles all the
 // provided actions and the default.
 
-const reducer = handleActions(
+const reducer = createReducer(
   {
     [actions.counter.increment]: (state, { payload }) => {
       return { ...state, counter: state.counter + payload };

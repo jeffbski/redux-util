@@ -329,18 +329,18 @@ const { actionOne, actionTwo, actionThree } = createActions(
 );
 
 expect(actionOne('key', 1)).to.deep.equal({
-  type: 'foo--actionOne,
+  type: 'foo--actionOne',
   payload: { key: 1 }
 });
 
 expect(actionTwo('first', 'second')).to.deep.equal({
-  type: 'foo--actionTwo,
+  type: 'foo--actionTwo',
   payload: ['first'],
   meta: { second: 'second' }
 });
 
 expect(actionThree(3)).to.deep.equal({
-  type: 'foo--actionThree,
+  type: 'foo--actionThree',
   payload: 3
 });
 ```

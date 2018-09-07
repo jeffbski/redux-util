@@ -1,6 +1,6 @@
 {
   "name": "@jeffbski/redux-util",
-  "version": "2.6.1",
+  "version": "3.0.0-beta.0",
   "description": "Redux utilities",
   "main": "build-lib/index.js",
   "module": "es/index.js",

@@ -53,17 +53,17 @@ describe('createActions', () => {
     );
   });
 
-  it('returns a map of camel-cased action types to action creators', () => {
-    const { actionOne, actionTwo } = createActions({
+  it('returns a map of action types to action creators', () => {
+    const { ACTION_ONE, ACTION_TWO } = createActions({
       ACTION_ONE: (key, value) => ({ [key]: value }),
       ACTION_TWO: (first, second) => [first, second]
     });
 
-    expect(actionOne('value', 1)).toEqual({
+    expect(ACTION_ONE('value', 1)).toEqual({
       type: 'ACTION_ONE',
       payload: { value: 1 }
     });
-    expect(actionTwo('value', 2)).toEqual({
+    expect(ACTION_TWO('value', 2)).toEqual({
       type: 'ACTION_TWO',
       payload: ['value', 2]
     });
@@ -71,37 +71,81 @@ describe('createActions', () => {
 
   it('honors special delimiters in action types', () => {
     const {
-      p: { actionOne },
-      q: { actionTwo }
+      p: { ACTION_ONE },
+      q: { ACTION_TWO }
     } = createActions({
-      'P/ACTION_ONE': (key, value) => ({ [key]: value }),
-      'Q/ACTION_TWO': (first, second) => [first, second]
+      'p/ACTION_ONE': (key, value) => ({ [key]: value }),
+      'q/ACTION_TWO': (first, second) => [first, second]
     });
 
-    expect(actionOne('value', 1)).toEqual({
-      type: 'P/ACTION_ONE',
+    expect(ACTION_ONE('value', 1)).toEqual({
+      type: 'p/ACTION_ONE',
       payload: { value: 1 }
     });
-    expect(actionTwo('value', 2)).toEqual({
-      type: 'Q/ACTION_TWO',
+    expect(ACTION_TWO('value', 2)).toEqual({
+      type: 'q/ACTION_TWO',
       payload: ['value', 2]
+    });
+  });
+
+  it('uses the identity if the payload creator is undefined in map', () => {
+    const {
+      action1,
+      foo: { bar }
+    } = createActions({
+      action1: undefined,
+      foo: {
+        bar: undefined
+      }
+    });
+
+    expect(action1(1)).toEqual({
+      type: 'action1',
+      payload: 1
+    });
+
+    expect(bar(1)).toEqual({
+      type: 'foo/bar',
+      payload: 1
+    });
+  });
+
+  it('uses the identity if the payload creator is null in map', () => {
+    const {
+      action1,
+      foo: { bar }
+    } = createActions({
+      action1: null,
+      foo: {
+        bar: null
+      }
+    });
+
+    expect(action1(1)).toEqual({
+      type: 'action1',
+      payload: 1
+    });
+
+    expect(bar(1)).toEqual({
+      type: 'foo/bar',
+      payload: 1
     });
   });
 
   it('uses the identity if the payload creator is undefined in array form', () => {
     const { action1, action2 } = createActions({
-      ACTION_1: [undefined, meta1 => ({ meta1 })],
-      ACTION_2: [undefined, ({ value }) => ({ meta2: value })]
+      action1: [undefined, meta1 => ({ meta1 })],
+      action2: [undefined, ({ value }) => ({ meta2: value })]
     });
 
     expect(action1(1)).toEqual({
-      type: 'ACTION_1',
+      type: 'action1',
       payload: 1,
       meta: { meta1: 1 }
     });
 
     expect(action2({ value: 2 })).toEqual({
-      type: 'ACTION_2',
+      type: 'action2',
       payload: { value: 2 },
       meta: { meta2: 2 }
     });
@@ -109,33 +153,33 @@ describe('createActions', () => {
 
   it('uses the identity and meta creators in array form', () => {
     const { action1, action2 } = createActions({
-      ACTION_1: [value => ({ value }), meta1 => ({ meta1 })],
-      ACTION_2: [({ value }) => value, ({ value }) => ({ meta2: value })]
+      action1: [value => ({ value }), meta1 => ({ meta1 })],
+      action2: [({ value }) => value, ({ value }) => ({ meta2: value })]
     });
 
     expect(action1(1)).toEqual({
-      type: 'ACTION_1',
+      type: 'action1',
       payload: { value: 1 },
       meta: { meta1: 1 }
     });
 
     expect(action2({ value: 2 })).toEqual({
-      type: 'ACTION_2',
+      type: 'action2',
       payload: 2,
       meta: { meta2: 2 }
     });
   });
 
   it('uses identity payload creators for trailing string action types', () => {
-    const { action1, action2 } = createActions('ACTION_1', 'ACTION_2');
+    const { action1, action2 } = createActions('action1', 'action2');
 
     expect(action1(1)).toEqual({
-      type: 'ACTION_1',
+      type: 'action1',
       payload: 1
     });
 
     expect(action2(2)).toEqual({
-      type: 'ACTION_2',
+      type: 'action2',
       payload: 2
     });
   });
@@ -143,28 +187,28 @@ describe('createActions', () => {
   it('creates actions from an action map and action types', () => {
     const { action1, action2, action3, action4 } = createActions(
       {
-        ACTION_1: (key, value) => ({ [key]: value }),
-        ACTION_2: [first => [first], (first, second) => ({ second })]
+        action1: (key, value) => ({ [key]: value }),
+        action2: [first => [first], (first, second) => ({ second })]
       },
-      'ACTION_3',
-      'ACTION_4'
+      'action3',
+      'action4'
     );
 
     expect(action1('value', 1)).toEqual({
-      type: 'ACTION_1',
+      type: 'action1',
       payload: { value: 1 }
     });
     expect(action2('value', 2)).toEqual({
-      type: 'ACTION_2',
+      type: 'action2',
       payload: ['value'],
       meta: { second: 2 }
     });
     expect(action3(3)).toEqual({
-      type: 'ACTION_3',
+      type: 'action3',
       payload: 3
     });
     expect(action4(4)).toEqual({
-      type: 'ACTION_4',
+      type: 'action4',
       payload: 4
     });
   });
@@ -172,65 +216,65 @@ describe('createActions', () => {
   it('creates actions from a namespaced action map', () => {
     const actionCreators = createActions(
       {
-        APP: {
-          COUNTER: {
-            INCREMENT: amount => ({ amount }),
-            DECREMENT: amount => ({ amount: -amount }),
-            SET: undefined
+        app: {
+          counter: {
+            increment: amount => ({ amount }),
+            decrement: amount => ({ amount: -amount }),
+            set: undefined
           },
-          NOTIFY: (username, message) => ({
+          notify: (username, message) => ({
             message: `${username}: ${message}`
           })
         },
-        LOGIN: username => ({ username })
+        login: username => ({ username })
       },
-      'ACTION_ONE',
-      'ACTION_TWO'
+      'actionOne',
+      'actionTwo'
     );
 
     expect(actionCreators.app.counter.increment(1)).toEqual({
-      type: 'APP/COUNTER/INCREMENT',
+      type: 'app/counter/increment',
       payload: { amount: 1 }
     });
     expect(actionCreators.app.counter.decrement(1)).toEqual({
-      type: 'APP/COUNTER/DECREMENT',
+      type: 'app/counter/decrement',
       payload: { amount: -1 }
     });
     expect(actionCreators.app.counter.set(100)).toEqual({
-      type: 'APP/COUNTER/SET',
+      type: 'app/counter/set',
       payload: 100
     });
     expect(actionCreators.app.notify('yangmillstheory', 'Hello World')).toEqual(
       {
-        type: 'APP/NOTIFY',
+        type: 'app/notify',
         payload: { message: 'yangmillstheory: Hello World' }
       }
     );
     expect(actionCreators.login('yangmillstheory')).toEqual({
-      type: 'LOGIN',
+      type: 'login',
       payload: { username: 'yangmillstheory' }
     });
     expect(actionCreators.actionOne('one')).toEqual({
-      type: 'ACTION_ONE',
+      type: 'actionOne',
       payload: 'one'
     });
     expect(actionCreators.actionTwo('two')).toEqual({
-      type: 'ACTION_TWO',
+      type: 'actionTwo',
       payload: 'two'
     });
   });
 
   it('creates namespaced actions with payload creators in array form', () => {
     const actionCreators = createActions({
-      APP: {
-        COUNTER: {
-          INCREMENT: [
+      app: {
+        counter: {
+          increment: [
             amount => ({ amount }),
             amount => ({ key: 'value', amount })
           ],
-          DECREMENT: amount => ({ amount: -amount })
+          decrement: amount => ({ amount: -amount })
         },
-        NOTIFY: [
+        notify: [
           (username, message) => ({ message: `${username}: ${message}` }),
           (username, message) => ({ username, message })
         ]
@@ -238,17 +282,17 @@ describe('createActions', () => {
     });
 
     expect(actionCreators.app.counter.increment(1)).toEqual({
-      type: 'APP/COUNTER/INCREMENT',
+      type: 'app/counter/increment',
       payload: { amount: 1 },
       meta: { key: 'value', amount: 1 }
     });
     expect(actionCreators.app.counter.decrement(1)).toEqual({
-      type: 'APP/COUNTER/DECREMENT',
+      type: 'app/counter/decrement',
       payload: { amount: -1 }
     });
     expect(actionCreators.app.notify('yangmillstheory', 'Hello World')).toEqual(
       {
-        type: 'APP/NOTIFY',
+        type: 'app/notify',
         payload: { message: 'yangmillstheory: Hello World' },
         meta: { username: 'yangmillstheory', message: 'Hello World' }
       }
@@ -258,15 +302,15 @@ describe('createActions', () => {
   it('creates namespaced actions with a chosen namespace string', () => {
     const actionCreators = createActions(
       {
-        APP: {
-          COUNTER: {
-            INCREMENT: [
+        app: {
+          counter: {
+            increment: [
               amount => ({ amount }),
               amount => ({ key: 'value', amount })
             ],
-            DECREMENT: amount => ({ amount: -amount })
+            decrement: amount => ({ amount: -amount })
           },
-          NOTIFY: [
+          notify: [
             (username, message) => ({ message: `${username}: ${message}` }),
             (username, message) => ({ username, message })
           ]
@@ -276,17 +320,17 @@ describe('createActions', () => {
     );
 
     expect(actionCreators.app.counter.increment(1)).toEqual({
-      type: 'APP--COUNTER--INCREMENT',
+      type: 'app--counter--increment',
       payload: { amount: 1 },
       meta: { key: 'value', amount: 1 }
     });
     expect(actionCreators.app.counter.decrement(1)).toEqual({
-      type: 'APP--COUNTER--DECREMENT',
+      type: 'app--counter--decrement',
       payload: { amount: -1 }
     });
     expect(actionCreators.app.notify('yangmillstheory', 'Hello World')).toEqual(
       {
-        type: 'APP--NOTIFY',
+        type: 'app--notify',
         payload: { message: 'yangmillstheory: Hello World' },
         meta: { username: 'yangmillstheory', message: 'Hello World' }
       }
@@ -296,57 +340,57 @@ describe('createActions', () => {
   it('creates prefixed actions if `prefix` option exists', () => {
     const actionCreators = createActions(
       {
-        APP: {
-          COUNTER: {
-            INCREMENT: amount => ({ amount }),
-            DECREMENT: amount => ({ amount: -amount }),
-            SET: undefined
+        app: {
+          counter: {
+            increment: amount => ({ amount }),
+            decrement: amount => ({ amount: -amount }),
+            set: undefined
           },
-          NOTIFY: (username, message) => ({
+          notify: (username, message) => ({
             message: `${username}: ${message}`
           })
         },
-        LOGIN: username => ({ username })
+        login: username => ({ username })
       },
-      'ACTION_ONE',
-      'ACTION_TWO',
+      'actionOne',
+      'actionTwo',
       { prefix: 'my-awesome-feature' }
     );
 
     expect(actionCreators.app.counter.increment(1)).toEqual({
-      type: 'my-awesome-feature/APP/COUNTER/INCREMENT',
+      type: 'my-awesome-feature/app/counter/increment',
       payload: { amount: 1 }
     });
 
     expect(actionCreators.app.counter.decrement(1)).toEqual({
-      type: 'my-awesome-feature/APP/COUNTER/DECREMENT',
+      type: 'my-awesome-feature/app/counter/decrement',
       payload: { amount: -1 }
     });
 
     expect(actionCreators.app.counter.set(100)).toEqual({
-      type: 'my-awesome-feature/APP/COUNTER/SET',
+      type: 'my-awesome-feature/app/counter/set',
       payload: 100
     });
 
     expect(actionCreators.app.notify('yangmillstheory', 'Hello World')).toEqual(
       {
-        type: 'my-awesome-feature/APP/NOTIFY',
+        type: 'my-awesome-feature/app/notify',
         payload: { message: 'yangmillstheory: Hello World' }
       }
     );
 
     expect(actionCreators.login('yangmillstheory')).toEqual({
-      type: 'my-awesome-feature/LOGIN',
+      type: 'my-awesome-feature/login',
       payload: { username: 'yangmillstheory' }
     });
 
     expect(actionCreators.actionOne('one')).toEqual({
-      type: 'my-awesome-feature/ACTION_ONE',
+      type: 'my-awesome-feature/actionOne',
       payload: 'one'
     });
 
     expect(actionCreators.actionTwo('two')).toEqual({
-      type: 'my-awesome-feature/ACTION_TWO',
+      type: 'my-awesome-feature/actionTwo',
       payload: 'two'
     });
   });
@@ -354,20 +398,20 @@ describe('createActions', () => {
   it('properly handles `prefix` and `namespace` options provided together', () => {
     const actionCreators = createActions(
       {
-        APP: {
-          COUNTER: {
-            INCREMENT: amount => ({ amount }),
-            DECREMENT: amount => ({ amount: -amount }),
-            SET: undefined
+        app: {
+          counter: {
+            increment: amount => ({ amount }),
+            decrement: amount => ({ amount: -amount }),
+            set: undefined
           },
-          NOTIFY: (username, message) => ({
+          notify: (username, message) => ({
             message: `${username}: ${message}`
           })
         },
-        LOGIN: username => ({ username })
+        login: username => ({ username })
       },
-      'ACTION_ONE',
-      'ACTION_TWO',
+      'actionOne',
+      'actionTwo',
       {
         prefix: 'my-awesome-feature',
         namespace: '--'
@@ -375,39 +419,39 @@ describe('createActions', () => {
     );
 
     expect(actionCreators.app.counter.increment(1)).toEqual({
-      type: 'my-awesome-feature--APP--COUNTER--INCREMENT',
+      type: 'my-awesome-feature--app--counter--increment',
       payload: { amount: 1 }
     });
 
     expect(actionCreators.app.counter.decrement(1)).toEqual({
-      type: 'my-awesome-feature--APP--COUNTER--DECREMENT',
+      type: 'my-awesome-feature--app--counter--decrement',
       payload: { amount: -1 }
     });
 
     expect(actionCreators.app.counter.set(100)).toEqual({
-      type: 'my-awesome-feature--APP--COUNTER--SET',
+      type: 'my-awesome-feature--app--counter--set',
       payload: 100
     });
 
     expect(actionCreators.app.notify('yangmillstheory', 'Hello World')).toEqual(
       {
-        type: 'my-awesome-feature--APP--NOTIFY',
+        type: 'my-awesome-feature--app--notify',
         payload: { message: 'yangmillstheory: Hello World' }
       }
     );
 
     expect(actionCreators.login('yangmillstheory')).toEqual({
-      type: 'my-awesome-feature--LOGIN',
+      type: 'my-awesome-feature--login',
       payload: { username: 'yangmillstheory' }
     });
 
     expect(actionCreators.actionOne('one')).toEqual({
-      type: 'my-awesome-feature--ACTION_ONE',
+      type: 'my-awesome-feature--actionOne',
       payload: 'one'
     });
 
     expect(actionCreators.actionTwo('two')).toEqual({
-      type: 'my-awesome-feature--ACTION_TWO',
+      type: 'my-awesome-feature--actionTwo',
       payload: 'two'
     });
   });

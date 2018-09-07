@@ -89,7 +89,6 @@
   "dependencies": {
     "core-js": "^2.5.7",
     "invariant": "^2.2.1",
-    "lodash.camelcase": "^4.3.0",
     "lodash.curry": "^4.1.1",
     "reduce-reducers": "^0.1.0"
   },

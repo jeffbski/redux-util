@@ -6,7 +6,6 @@ import isArray from './utils/isArray';
 import isString from './utils/isString';
 import isNil from './utils/isNil';
 import getLastElement from './utils/getLastElement';
-import camelCase from './utils/camelCase';
 import arrayToObject from './utils/arrayToObject';
 import flattenActionMap from './utils/flattenActionMap';
 import unflattenActionCreators from './utils/unflattenActionCreators';
@@ -85,7 +84,7 @@ function actionCreatorsFromIdentityActions(identityActions, options) {
     Object.keys(actionCreators),
     (partialActionCreators, type) => ({
       ...partialActionCreators,
-      [camelCase(type)]: actionCreators[type]
+      [type]: actionCreators[type]
     })
   );
 }

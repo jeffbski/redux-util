@@ -91,7 +91,7 @@ describe('handleAction', () => {
   });
 
   it('single handler form - resulting reducer - works with createActions action creators', () => {
-    const { increment } = createActions('INCREMENT');
+    const { increment } = createActions('increment');
 
     const reducer = handleAction(
       increment,

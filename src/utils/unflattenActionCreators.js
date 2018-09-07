@@ -1,6 +1,5 @@
 import { DEFAULT_NAMESPACE } from '../constants';
 import isEmpty from './isEmpty';
-import camelCase from './camelCase';
 
 export default function unflattenActionCreators(
   flatActionCreators,
@@ -11,7 +10,7 @@ export default function unflattenActionCreators(
     partialNestedActionCreators = {},
     partialFlatActionTypePath = []
   ) {
-    const nextNamespace = camelCase(partialFlatActionTypePath.shift());
+    const nextNamespace = partialFlatActionTypePath.shift();
     if (isEmpty(partialFlatActionTypePath)) {
       partialNestedActionCreators[nextNamespace] =
         flatActionCreators[flatActionType];

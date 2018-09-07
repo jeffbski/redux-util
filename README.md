@@ -6,6 +6,7 @@ Differences from redux-actions
 
 - no automatic camel casing in createActions
 - renamed handleActions to createReducer
+- removed handleAction export
 
 [![Build Status](https://travis-ci.org/jeffbski/redux-util.svg?branch=master)](https://travis-ci.org/jeffbski/redux-util)
 
@@ -77,5 +78,6 @@ Differences from redux-actions
 
 - automatic camel casing is not used in createActions to prevent confusion.
 - handleActions renamed createReducer
+- removed handleAction export
 
 The original contributors can be found at https://github.com/redux-utilities/redux-actions/graphs/contributors

@@ -5,22 +5,22 @@
 For NPM users
 
 ```bash
-$ npm install --save redux-actions
+$ npm install --save @jeffbski/redux-util
 ```
 
 For Yarn users
 
 ```bash
-$ yarn add redux-actions
+$ yarn add @jeffbski/redux-util
 ```
 
 For UMD users
 
-The [UMD](https://unpkg.com/redux-actions@latest/dist) build exports a global called `window.ReduxActions` if you add it to your page via a `<script>` tag. We _don’t_ recommend UMD builds for any serious application, as most of the libraries complementary to Redux are only available on [npm](https://www.npmjs.com/search?q=redux).
+The [UMD](https://unpkg.com/@jeffbski/redux-util@latest/dist) build exports a global called `window.ReduxUtil` if you add it to your page via a `<script>` tag. We _don’t_ recommend UMD builds for any serious application, as most of the libraries complementary to Redux are only available on [npm](https://www.npmjs.com/search?q=redux).
 
 ### Vanilla Counter
 
-We are going to be building a simple counter, I recommend using something like [jsfiddle](https://jsfiddle.net/) or [codepen](https://codepen.io/pen/) or [codesandbox](https://codesandbox.io) if you would like to follow along, that way you do not need a complicated setup to grasp the basics of `redux-actions`.
+We are going to be building a simple counter, I recommend using something like [jsfiddle](https://jsfiddle.net/) or [codepen](https://codepen.io/pen/) or [codesandbox](https://codesandbox.io) if you would like to follow along, that way you do not need a complicated setup to grasp the basics of `@jeffbski/redux-util`.
 
 To begin we are going to need some scaffolding so here is some HTML to get started with. You may need to create a new file called main.js depending on where you are trying to set this tutorial up.
 
@@ -30,7 +30,7 @@ To begin we are going to need some scaffolding so here is some HTML to get start
   <head>
     <meta charset="utf-8"/>
     <script src="https://unpkg.com/redux@latest/dist/redux.js"></script>
-    <script src="https://unpkg.com/redux-actions@latest/dist/redux-actions.js"></script>
+    <script src="https://unpkg.com/@jeffbski/redux-util@latest/dist/redux-util.js"></script>
   </head>
   <body>
     <button id="increment">INCREMENT</button>
@@ -59,7 +59,7 @@ const render = () => {
 render();
 ```
 
-With our default state and renderer in place we can start to use our libraries. `redux` and `redux-actions` can be found via the globals `window.Redux` and `window.ReduxActions`. Okay enough setup lets start to make something with `redux`!
+With our default state and renderer in place we can start to use our libraries. `redux` and `redux-util` can be found via the globals `window.Redux` and `window.ReduxUtil`. Okay enough setup lets start to make something with `redux`!
 
 We are going to want a store for our defaultState. We can create one from `redux` using `createStore`.
 
@@ -70,7 +70,7 @@ const { createStore } = window.Redux;
 We are going to want to create our first action and handle that action.
 
 ```js
-const { createAction, handleAction } = window.ReduxActions;
+const { createAction, createReducer } = window.ReduxUtil;
 ```
 
 Next lets create our first action, 'increment', using `createAction`.
@@ -79,12 +79,11 @@ Next lets create our first action, 'increment', using `createAction`.
 const increment = createAction('INCREMENT');
 ```
 
-Next we are going to handle that action with `handleAction`. We can provide it our `increment` action to let it know which action to handle, a method to handle our state transformation, and the default state.
+Next we are going to handle that action with `createReducer`. We can provide it our `increment` action to let it know which action to handle, a method to handle our state transformation, and the default state.
 
 ```js
-const reducer = handleAction(
-  increment,
-  (state, action) => ({
+const reducer = createReducer({
+  [increment]: (state, action) => ({
     ...state,
     counter: state.counter + 1
   }),
@@ -92,7 +91,7 @@ const reducer = handleAction(
 );
 ```
 
-`handleAction` produced a reducer for our `redux` store. Now that we have a reducer we can create a store.
+`createReducer` produced a reducer for our `redux` store. Now that we have a reducer we can create a store.
 
 ```js
 const store = createStore(reducer, defaultState);
@@ -124,12 +123,13 @@ We have one button working, so why don't we try to get the second one working by
 const decrement = createAction('DECREMENT');
 ```
 
-Instead of using `handleAction` like we did for `increment`, we can replace it with our other tool `handleActions` which will let us handle both `increment` and `decrement` actions.
+Now we can extend our previous example adding another entry into our
+reducerMap to handle both increment and decrement.
 
 ```js
-const { createAction, handleActions } = window.ReduxActions;
+const { createAction, createReducer } = window.ReduxUtil;
 
-const reducer = handleActions(
+const reducer = createReducer(
   {
     [increment]: state => ({ ...state, counter: state.counter + 1 }),
     [decrement]: state => ({ ...state, counter: state.counter - 1 })
@@ -138,7 +138,7 @@ const reducer = handleActions(
 );
 ```
 
-Now when we add a handler for dispatching our `decrement` action we can see both `increment` and `decrement` buttons now function appropriately.
+Now we can see both `increment` and `decrement` buttons now function appropriately.
 
 ```js
 document.getElementById('decrement').addEventListener('click', () => {
@@ -146,53 +146,14 @@ document.getElementById('decrement').addEventListener('click', () => {
 });
 ```
 
-You might be thinking at this point we are all done. We have both buttons hooked up, and we can call it a day. Yet we have much optimizing to do. `redux-actions` has other tools we have not yet taken advantage of. So lets investigate how we can change the code to use the remaining tools and make the code less verbose.
+You might be thinking at this point we are all done. We have both buttons hooked up, and we can call it a day. Yet we have much optimizing to do. `redux-util` has other tools we have not yet taken advantage of. So lets investigate how we can change the code to use the remaining tools and make the code less verbose.
 
 We have declarations for both `increment` and `decrement` action creators. We can modify these lines from using `createAction` to using `createActions` like so.
 
 ```js
-const { createActions, handleActions } = window.ReduxActions;
+const { createActions, createReducer } = window.ReduxUtil;
 
-const { increment, decrement } = createActions('INCREMENT', 'DECREMENT');
+const { increment, decrement } = createActions(['increment', 'decrement');
 ```
 
-We can still do better though. What if we want an action like `'INCREMENT_FIVE'`? We would want to be able to create variations of our existing actions easily. We can abstract our logic in the reducer to our actions, making new permutations of existing actions easy to create.
-
-```js
-const { increment, decrement } = createActions({
-  INCREMENT: (amount = 1) => ({ amount }),
-  DECREMENT: (amount = 1) => ({ amount: -amount })
-});
-
-const reducer = handleActions(
-  {
-    [increment]: (state, { payload: { amount } }) => {
-      return { ...state, counter: state.counter + amount };
-    },
-    [decrement]: (state, { payload: { amount } }) => {
-      return { ...state, counter: state.counter + amount };
-    }
-  },
-  defaultState
-);
-```
-
-Now that we have moved our logic, our `reducers` are looking identical. If only we could combine them somehow. Well we can! `combineActions` can be used to reduce multiple distinct actions with the same reducer.
-
-```js
-const { createActions, handleActions, combineActions } = window.ReduxActions;
-
-const reducer = handleActions(
-  {
-    [combineActions(increment, decrement)]: (
-      state,
-      { payload: { amount } }
-    ) => {
-      return { ...state, counter: state.counter + amount };
-    }
-  },
-  defaultState
-);
-```
-
-We have finally used all of the tools that `redux-actions` has to offer. Concluding our [vanilla tutorial](https://www.webpackbin.com/bins/-KntJIfbsxVzsD98UEWF). This doesn't mean you don't have more to learn though. Much more can be accomplished using these tools in many ways, just head on over to the [API Reference](../api) to begin exploring what else `redux-actions` can do for you.
+Much more can be accomplished using these tools in many ways, just head on over to the [API Reference](../api) to begin exploring what else `redux-util` can do for you.

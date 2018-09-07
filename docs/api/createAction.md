@@ -5,6 +5,7 @@
     - [`createAction(type)`](#createactiontype)
     - [`createAction(type, payloadCreator)`](#createactiontype-payloadcreator)
     - [`createAction(type, payloadCreator, metaCreator)`](#createactiontype-payloadcreator-metacreator)
+    - [`createAction(type, payloadCreator, metaCreator, options)`](#createactiontype-payloadcreator-metacreator-options)
   - [createActions](#createactions)
     - [`createActions(actionMap)`](#createactionsactionmap)
     - [`createActions(actionMap, ...identityActions)`](#createactionsactionmap-identityactions)
@@ -25,7 +26,7 @@ createAction(
 Wraps an action creator so that its return value is the payload of a Flux Standard Action.
 
 ```js
-import { createAction } from 'redux-actions';
+import { createAction } from '@jeffbski/redux-util';
 ```
 
 **NOTE:** The more correct name for this function is probably `createActionCreator()`, but that seems a bit redundant.
@@ -47,7 +48,7 @@ decrement([1, 42]); // { type: 'DECREMENT', payload: [1, 42] }
 ```
 
 If the payload is an instance of an [Error object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error),
-`redux-actions` will automatically set `action.error` to true.
+`@jeffbski/redux-util` will automatically set `action.error` to true.
 
 ###### EXAMPLE
 
@@ -132,6 +133,36 @@ updateAdminUser({ name: 'Foo' });
 // }
 ```
 
+#### `createAction(type, payloadCreator, metaCreator, options)` {#createactiontype-payloadcreator-metacreator-options}
+
+`options` is an optional object which can adjust the divider and prefix of action types'. Valid properties are `divider` and `prefix`. Both are optional.
+
+- setting `options.divider` - changes the divider between action parts, the default is `/`
+- setting `options.prefix` - changes the prefix of the action types, default is ``. It does not change the nesting depth of the resulting action object.
+
+###### EXAMPLE
+
+```js
+const updateAdminUser = createAction(
+  'UPDATE_ADMIN_USER',
+  updates => updates,
+  () => (
+    { admin: true },
+    {
+      divider: '--',
+      prefix: 'foo'
+    }
+  )
+);
+
+updateAdminUser({ name: 'Foo' });
+// {
+//   type: 'foo--UPDATE_ADMIN_USER',
+//   payload: { name: 'Foo' },
+//   meta: { admin: true },
+// }
+```
+
 ### createActions
 
 ```js
@@ -144,7 +175,7 @@ createActions(
 Returns an object mapping action types to action creators. The keys of this object are camel-cased from the keys in `actionMap` and the string literals of `identityActions`; the values are the action creators.
 
 ```js
-import { createActions } from 'redux-actions';
+import { createActions } from '@jeffbski/redux-util';
 ```
 
 #### `createActions(actionMap)` {#createactionsactionmap}
@@ -256,8 +287,6 @@ expect(actionThree(3)).to.deep.equal({
 ```
 
 #### `createActions(actionMap, ...identityActions, options)`{#createactionsactionmap-identityactions-options}
-
-`identityActions` is an optional list of positional string arguments that are action type strings; these action types will use the identity payload creator.
 
 `options` is an optional object which can adjust the divider and prefix of action types'. Valid properties are `divider` and `prefix`. Both are optional.
 

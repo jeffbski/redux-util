@@ -1,6 +1,6 @@
 # Usage with Middleware
 
-redux-actions is handy all by itself, however, its real power comes when you combine it with middleware.
+@jeffbski/redux-util is handy all by itself, however, its real power comes when you combine it with middleware.
 
 The identity form of `createAction` is a great way to create a single action creator that handles multiple payload types. For example, using [redux-promise](https://github.com/redux-utilities/redux-promise) and [redux-rx](https://github.com/acdlite/redux-rx):
 

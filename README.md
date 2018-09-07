@@ -70,7 +70,7 @@ export default reducer;
 
 # Documentation
 
-TODO
+See the [documentation here](./docs/README.md)
 
 ## Forked from redux-actions
 

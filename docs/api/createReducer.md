@@ -20,7 +20,9 @@ If `reducerMap` has a recursive structure, its leaves are used as reducers, and 
 import { createReducer } from '@jeffbski/redux-util';
 ```
 
-#### `createReducer(reducerMap, defaultState)` {#createreducerreducermap-defaultstate}
+#### `createReducer(reducerMap, defaultState)`
+
+<a name="createreducerreducermap-defaultstate"/>
 
 The second parameter `defaultState` is required, and is used when `undefined` is passed to the reducer.
 

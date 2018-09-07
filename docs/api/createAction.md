@@ -31,7 +31,9 @@ import { createAction } from '@jeffbski/redux-util';
 
 **NOTE:** The more correct name for this function is probably `createActionCreator()`, but that seems a bit redundant.
 
-#### `createAction(type)` {#createactiontype}
+#### `createAction(type)`
+
+<a name="createactiontype"/>
 
 Calling `createAction` with a `type` will return an action creator for dispatching actions. `type` must implement `toString` and is the only required parameter for `createAction`.
 
@@ -92,7 +94,9 @@ Use the identity form to create one-off actions.
 createAction('ADD_TODO')('Use Redux');
 ```
 
-#### `createAction(type, payloadCreator)` {#createactiontype-payloadcreator}
+#### `createAction(type, payloadCreator)`
+
+<a name="createactiontype-payloadcreator"/>
 
 `payloadCreator` must be a function, `undefined`, or `null`. If `payloadCreator` is `undefined` or `null`, the identity function is used.
 
@@ -112,7 +116,9 @@ expect(noop(42)).to.deep.equal({
 });
 ```
 
-#### `createAction(type, payloadCreator, metaCreator)` {#createactiontype-payloadcreator-metacreator}
+#### `createAction(type, payloadCreator, metaCreator)`
+
+<a name="createactiontype-payloadcreator-metacreator"/>
 
 `metaCreator` is an optional function that creates metadata for the payload. It receives the same arguments as the payload creator, but its result becomes the meta field of the resulting action. If `metaCreator` is undefined or not a function, the meta field is omitted.
 
@@ -133,7 +139,9 @@ updateAdminUser({ name: 'Foo' });
 // }
 ```
 
-#### `createAction(type, payloadCreator, metaCreator, options)` {#createactiontype-payloadcreator-metacreator-options}
+#### `createAction(type, payloadCreator, metaCreator, options)`
+
+<a name="createactiontype-payloadcreator-metacreator-options"/>
 
 `options` is an optional object which can adjust the divider and prefix of action types'. Valid properties are `divider` and `prefix`. Both are optional.
 
@@ -178,7 +186,9 @@ Returns an object mapping action types to action creators. The keys of this obje
 import { createActions } from '@jeffbski/redux-util';
 ```
 
-#### `createActions(actionMap)` {#createactionsactionmap}
+#### `createActions(actionMap)`
+
+<a name="createactionsactionmap"/>
 
 `actionMap` is an object which can optionally have a recursive data structure, with action types as keys, and whose values **must** be either
 
@@ -248,7 +258,9 @@ When using this form, you can pass an object with key `divider` as the last posi
 createActions({ ... }, 'INCREMENT', { divider: '--' })
 ```
 
-#### `createActions(actionMap, ...identityActions)`{#createactionsactionmap-identityactions}
+#### `createActions(actionMap, ...identityActions)`
+
+<a name="createactionsactionmap-identityactions"/>
 
 `identityActions` is an optional list of positional string arguments that are action type strings; these action types will use the identity payload creator.
 
@@ -286,7 +298,9 @@ expect(actionThree(3)).to.deep.equal({
 });
 ```
 
-#### `createActions(actionMap, ...identityActions, options)`{#createactionsactionmap-identityactions-options}
+#### `createActions(actionMap, ...identityActions, options)`
+
+<a name="createactionsactionmap-identityactions-options"/>
 
 `options` is an optional object which can adjust the divider and prefix of action types'. Valid properties are `divider` and `prefix`. Both are optional.
 

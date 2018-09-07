@@ -1,7 +1,8 @@
 node_modules
 coverage
-es
-lib
 dist
 .idea
 *.log
+.nyc_output
+build-lib
+build-es

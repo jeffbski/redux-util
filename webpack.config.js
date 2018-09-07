@@ -1,30 +1,43 @@
-const path = require('path');
+'use strict';
+
 const webpack = require('webpack');
+const babelOptions = require('./babel.config');
 
-const { NODE_ENV } = process.env;
-const production = NODE_ENV === 'production';
+const env = process.env.NODE_ENV || 'production';
 
-module.exports = {
-  entry: path.join(__dirname, 'src/index.js'),
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: `redux-actions${production ? '.min' : ''}.js`,
-    library: 'ReduxActions',
-    libraryTarget: 'umd'
+// default production build will tree shake and minimize
+// we have both a minimized and unminimized production build for umd
+const MINIMIZE =
+  process.env.MINIMIZE && process.env.MINIMIZE === 'false'
+    ? false
+    : env === 'production'
+      ? true
+      : false;
+
+const config = {
+  mode: env,
+  optimization: {
+    minimize: MINIMIZE
   },
-  mode: production ? 'production' : 'development',
   module: {
     rules: [
       {
         test: /\.js$/,
-        loaders: ['babel-loader'],
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        use: [{ loader: 'babel-loader', options: babelOptions }]
       }
     ]
   },
+  output: {
+    library: 'ReduxUtil',
+    libraryTarget: 'umd'
+  },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(NODE_ENV)
-    })
+      'process.env.NODE_ENV': JSON.stringify(env)
+    }),
+    new webpack.optimize.ModuleConcatenationPlugin()
   ]
 };
+
+module.exports = config;

@@ -2,34 +2,44 @@
   "name": "@jeffbski/redux-util",
   "version": "2.6.1",
   "description": "Redux utilities",
-  "main": "lib/index.js",
+  "main": "build-lib/index.js",
   "module": "es/index.js",
   "sideEffects": false,
   "scripts": {
     "precommit": "lint-staged",
     "format": "prettier --write \"**/*.{js,md}\"",
     "format:check": "prettier --list-different \"**/*.{js,md}\"",
-    "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
-    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
-    "build:umd": "cross-env NODE_ENV=development webpack",
-    "build:umd:min": "cross-env NODE_ENV=production webpack && es-check es5 dist/redux-actions.min.js",
-    "build": "run-s clean && run-p build:**",
-    "clean": "rimraf coverage dist es lib",
-    "lint": "xo",
-    "prepublishOnly": "run-s build",
-    "publishScoped": "npm publish --access public",
-    "test": "jest"
+    "browserslist": "browserslist",
+    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir build-lib",
+    "build:es": "cross-env BABEL_ENV=es babel src --out-dir build-es",
+    "build:umd": "cross-env NODE_ENV=production MINIMIZE=false BABEL_ENV=es webpack --entry ./src/index.js --output ./dist/redux-util.js",
+    "build:umd:min": "cross-env NODE_ENV=production BABEL_ENV=es webpack --entry ./src/index.js --output ./dist/redux-util.min.js",
+    "build": "run-p build:**",
+    "check:src": "npm run lint && npm run test",
+    "clean": "rimraf build-lib dist build-es coverage",
+    "escheck": "npm run escheck:commonjs && npm run escheck:es && npm run escheck:umd",
+    "escheck:commonjs": "es-check es5 build-lib/**.js",
+    "escheck:es": "es-check --module true es6 build-es/**.js",
+    "escheck:umd": "es-check es5 dist/**.js",
+    "lint": "eslint src test",
+    "prepublish": "npm run clean && npm run check:src && npm run build && npm run escheck",
+    "publish-scoped": "npm publish --access public",
+    "publish-tag-next": "npm publish --access public --tag next && npm view",
+    "test": "cross-env BABEL_ENV=commonjs mocha --require @babel/register --recursive",
+    "test:cov": "cross-env NODE_ENV=test BABEL_ENV=cov nyc --reporter=lcov --reporter=text mocha test --recursive"
   },
   "files": [
-    "es",
-    "lib",
-    "dist"
+    "dist",
+    "build-lib",
+    "build-es",
+    "src"
   ],
   "keywords": [
     "flux",
     "redux",
     "fsa",
-    "actions"
+    "actions",
+    "reducer"
   ],
   "author": "Jeff Barczewski <jeff.barczewski@gmail.com> (https://github.com/jeffbski)",
   "contributors": [
@@ -45,30 +55,39 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.9.4",
     "ajv": "^6.5.3",
-    "babel-cli": "^6.7.7",
-    "babel-core": "^6.7.7",
-    "babel-jest": "^22.4.3",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "cross-env": "^2.0.0",
-    "es-check": "^2.0.4",
+    "babel-loader": "^8.0.1",
+    "babel-plugin-istanbul": "^5.0.1",
+    "browserslist": "^4.1.0",
+    "cross-env": "^5.2.0",
+    "es-check": "^2.2.0",
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-jest-files": "^0.1.1",
     "eslint-config-unicorn-camelcase": "^0.1.1",
+    "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.11.1",
+    "expect-legacy": "^1.20.2",
     "flux-standard-action": "^1.0.0",
     "husky": "^0.14.3",
-    "jest": "^23.5.0",
     "lint-staged": "^7.0.4",
+    "mocha": "^5.2.0",
     "npm-run-all": "^4.1.2",
+    "nyc": "^13.0.1",
     "prettier": "^1.12.1",
     "rimraf": "^2.5.3",
-    "webpack": "^4.1.1",
-    "webpack-cli": "^2.0.11",
-    "xo": "^0.20.3"
+    "webpack": "^4.17.2",
+    "webpack-command": "^0.4.1"
   },
   "dependencies": {
+    "core-js": "^2.5.7",
     "invariant": "^2.2.1",
     "lodash.camelcase": "^4.3.0",
     "lodash.curry": "^4.1.1",
@@ -95,5 +114,19 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "**/*.spec.js",
+      "**/*.test.js"
+    ],
+    "require": [
+      "@babel/register"
+    ],
+    "sourceMap": false,
+    "instrument": false
   }
 }

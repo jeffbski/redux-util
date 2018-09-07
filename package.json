@@ -4,7 +4,6 @@
   "description": "Redux utilities",
   "main": "lib/index.js",
   "module": "es/index.js",
-  "jsnext:main": "es/index.js",
   "sideEffects": false,
   "scripts": {
     "precommit": "lint-staged",
@@ -46,6 +45,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "ajv": "^6.5.3",
     "babel-cli": "^6.7.7",
     "babel-core": "^6.7.7",
     "babel-jest": "^22.4.3",
@@ -59,7 +59,7 @@
     "eslint-plugin-prettier": "^2.6.0",
     "flux-standard-action": "^1.0.0",
     "husky": "^0.14.3",
-    "jest": "^22.4.3",
+    "jest": "^23.5.0",
     "lint-staged": "^7.0.4",
     "npm-run-all": "^4.1.2",
     "prettier": "^1.12.1",

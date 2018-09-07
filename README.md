@@ -4,9 +4,9 @@ Initial codebase was based on redux-actions. Utility methods to simplify buildin
 
 Differences from redux-actions
 
-* no automatic camel casing in createActions
-* createActions accepts a namespace/prefix without deepening the object tree
-* renamed handleActions to createReducer
+- no automatic camel casing in createActions
+- createActions accepts a namespace/prefix without deepening the object tree
+- renamed handleActions to createReducer
 
 [![Build Status](https://travis-ci.org/jeffbski/redux-util.svg?branch=master)](https://travis-ci.org/jeffbski/redux-util)
 
@@ -14,10 +14,10 @@ Differences from redux-actions
 
 ### Table of Contents
 
-* [Getting Started](#getting-started)
-  * [Installation](#installation)
-  * [Usage](#usage)
-* [Documentation](#documentation)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Usage](#usage)
+- [Documentation](#documentation)
 
 # Getting Started
 
@@ -68,6 +68,12 @@ TODO
 
 ## Forked from redux-actions
 
-This code was forked from redux-actions which was created by Andrew Clark and released under the MIT license.
+This code was forked from redux-actions which was created by Andrew Clark and released under the MIT license. This was done to accommodate a different philosophy towards the api.
+
+Differences from redux-actions
+
+- automatic camel casing is not used in createActions to prevent confusion.
+- an optional namespacing value can be provided to createAction and createActions which will prefix all the action types with that plus a '/'. This occurs without deepening the object tree that createActions creates.
+- handleActions renamed createReducer
 
 The original contributors can be found at https://github.com/redux-utilities/redux-actions/graphs/contributors

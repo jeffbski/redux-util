@@ -86,7 +86,16 @@ const reducer = createReducer(
 );
 
 export default reducer;
+
+// test out the reducer, we can just do it manually here
+const s1 = reducer(defaultState, actions.counter.increment(10));
+console.log(s1); // { counter: 20 }
+
+const s2 = reducer(s1, actions.counter.decrement(5));
+console.log(s2); // { counter: 15 }
 ```
+
+You can see this example as a [live codesandbox example here](https://codesandbox.io/s/znrvr8ppnp)
 
 # Documentation
 
